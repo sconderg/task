@@ -15,14 +15,15 @@ const GET_COUNTRIES = gql`
 `;
 const Home: NextPage = () => {
 
+  const newLocal = useGQLQuery('countries', GET_COUNTRIES);
   // fetch some data
-  const {data, isLoading, error} = useGQLQuery('countries', GET_COUNTRIES);
+  const {data, isLoading, error} = newLocal;
   const [value, setValue] = useState('AD');
   const router = useRouter();
   if(isLoading) return <div>Loading...</div>
   if(error) return <div>Something went wrong!</div>
   else {
-    const handleClick = e => {
+    const handleClick = (e:any): void => {
       e.preventDefault();
       router.push(`/country?code=${value}`, `/country/${value}`);
     }
@@ -40,7 +41,7 @@ const Home: NextPage = () => {
                 setValue(e.target.value);
               }}
             >
-            {data.countries.map(country => (
+            {data.countries.map((country:any): JSX.Element => (
               <option key={country.code} value={country.code}>{country.name}</option>
             ))}
           </select>

@@ -3,6 +3,7 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Link from 'next/link'
 import {useGQLQuery} from './useGQLQuery'
+import {GetStaticProps, NextPage, NextPageContext} from 'next'
 const GET_COUNTRY = gql`
   query($code:ID!) {
     country(code: $code) {
@@ -15,11 +16,14 @@ const GET_COUNTRY = gql`
     }
   }
 `;
-const Country = ({code}) => {
+const Country: NextPage<{code: String}> = ({code}) => {
+    console.log(code)
     //fetch some data
-    const {data, isLoading, error} = useGQLQuery('country', GET_COUNTRY, {code: code});
-    if(isLoading) return <div>Loading...</div>
-    if(error) return <div>Something went wrong!</div>
+    const { data, isLoading, error } = useGQLQuery('country', GET_COUNTRY, { code: code })
+    if (isLoading)
+        return <div>Loading...</div>
+    if (error)
+        return <div>Something went wrong!</div>
     return (
         <>
             <Head>
@@ -40,15 +44,11 @@ const Country = ({code}) => {
     )
 }
 
-
-Country.getInitialProps = async ({ query }) => {
-    const { code } = query
-  
+export const getInitialProps = async ({query}: NextPageContext) => {
+    const {code} = query;
     return {
-      code
+        code
     }
-  
 }
-
 
 export default Country;
